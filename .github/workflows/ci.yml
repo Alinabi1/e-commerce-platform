@@ -35,7 +35,17 @@
         - name: Build Docker image
           run: docker build -t api-gateway:latest .
 
+        - name: Run container in background
+          run: docker run -d -p 8080:8080 --name test-api-gateway api-gateway-image
 
+        - name: Wait for container to start
+          run: sleep 10
+
+        - name: Test that API Gateway is running
+          run: curl --fail http://localhost:8080/actuator/health || (docker logs test-api-gateway && exit 1)
+
+        - name: Stop and remove container
+          run: docker rm -f test-api-gateway
 
 
     build-frontend:
@@ -60,6 +70,20 @@
         - name: Build frontend
           run: npm run build
 
+        - name: Build Docker image
+          run: docker build -t frontend-image .
+
+        - name: Run container in background
+          run: docker run -d -p 8080:80 --name test-frontend frontend-image
+
+        - name: Wait for container to start
+          run: sleep 5
+
+        - name: Test that frontend is running
+          run: curl --fail http://localhost:8080 || (docker logs test-frontend && exit 1)
+
+        - name: Stop and remove container
+          run: docker rm -f test-frontend
 
 
     build-order-service:
