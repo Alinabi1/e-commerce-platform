@@ -36,7 +36,7 @@
           run: docker build -t api-gateway:latest .
 
         - name: Run container in background
-          run: docker run -d -p 8080:8080 --name test-api-gateway api-gateway-image
+          run: docker run -d -p 8080:8080 --name test-api-gateway api-gateway
 
         - name: Wait for container to start
           run: sleep 10
