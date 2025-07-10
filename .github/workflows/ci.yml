@@ -1,0 +1,179 @@
+  name: CI Pipline
+
+  on:
+    push:
+      branches: [ main ]
+    pull_request:
+      branches: [ main ]
+
+  jobs:
+
+
+    build-api-gateway:
+      name: Build API-gateway
+      runs-on: ubuntu-latest
+      defaults:
+        run:
+          working-directory: ./api-gateway
+
+      steps:
+        - name: checkout code
+          uses: actions/checkout@v3
+
+        - name: set up JDK
+          uses: actions/setup-java@v4
+          with:
+            distribution: 'temurin'
+            java-version: '22'
+
+        - name: Restore dependencies
+          run: mvn dependency:go-offline
+
+        - name: Build with maven
+          run: mvn clean install -DskipTests
+
+
+
+    build-frontend:
+      name: Build React Frontend
+      runs-on: ubuntu-latest
+      defaults:
+        run:
+          working-directory: ./frontend
+
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v3
+
+        - name: Set up Node
+          uses: actions/setup-node@v3
+          with:
+            node-version: 20.12.2
+
+        - name: Install dependencies
+          run: npm install
+
+        - name: Build frontend
+          run: npm run build
+
+
+
+    build-order-service:
+      name: Build Java (Order service)
+      runs-on: ubuntu-latest
+      defaults:
+        run:
+          working-directory: ./order-service
+
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v3
+
+        - name: Set up JDK
+          uses: actions/setup-java@v4
+          with:
+            distribution: 'temurin'
+            java-version: '22'
+
+        - name: Restore dependencies
+          run: mvn dependency:go-offline
+
+        - name: Build project
+          run: mvn clean install -DskipTests
+
+
+
+    build-payment-service:
+      name: Build .NET (Payment  service)
+      runs-on: ubuntu-latest
+      defaults:
+        run:
+          working-directory: ./payment-service
+
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v4
+
+        - name: Set up .NET
+          uses: actions/setup-dotnet@v4
+          with:
+            dotnet-version: 8.0.403
+
+        - name: Restore dependencies
+          run: dotnet restore
+
+        - name: Build project
+          run: dotnet build --no-restore
+
+
+
+    build-product-service:
+      name: Build Java (Product service)
+      runs-on: ubuntu-latest
+      defaults:
+        run:
+          working-directory: ./product-service
+
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v3
+
+        - name: Set up JDK
+          uses: actions/setup-java@v4
+          with:
+            distribution: 'temurin'
+            java-version: '22'
+
+        - name: Restore dependencies
+          run: mvn dependency:go-offline
+
+        - name: Build project
+          run: mvn clean install -DskipTests
+
+
+    build-store-service:
+      name: Build Java (Store service)
+      runs-on: ubuntu-latest
+      defaults:
+        run:
+          working-directory: ./store-service
+
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v3
+
+        - name: Set up JDK
+          uses: actions/setup-java@v4
+          with:
+            distribution: 'temurin'
+            java-version: '22'
+
+        - name: Restore dependencies
+          run: mvn dependency:go-offline
+
+        - name: Build project
+          run: mvn clean install -DskipTests
+
+
+
+    build-user-service:
+      name: Build .NET (User  service)
+      runs-on: ubuntu-latest
+      defaults:
+        run:
+          working-directory: ./user-service
+
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v4
+
+        - name: Set up .NET
+          uses: actions/setup-dotnet@v4
+          with:
+            dotnet-version: 8.0.403
+
+        - name: Restore dependencies
+          run: dotnet restore
+
+        - name: Build project
+          run: dotnet build --no-restore
