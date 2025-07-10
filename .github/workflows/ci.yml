@@ -39,7 +39,7 @@
           run: docker run -d -p 8080:8080 --name test-api-gateway api-gateway
 
         - name: Wait for container to start
-          run: sleep 10
+          run: sleep 30
 
         - name: Test that API Gateway is running
           run: curl --fail http://localhost:8080/actuator/health || (docker logs test-api-gateway && exit 1)
