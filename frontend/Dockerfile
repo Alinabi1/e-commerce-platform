@@ -1,4 +1,3 @@
-FROM ubuntu:latest
 LABEL authors="alina"
 
 FROM node:20 AS build
