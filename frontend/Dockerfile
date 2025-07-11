@@ -1,6 +1,6 @@
-LABEL authors="alina"
-
 FROM node:20 AS build
+
+LABEL authors="alina"
 
 WORKDIR /app
 
