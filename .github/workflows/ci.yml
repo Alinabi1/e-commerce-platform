@@ -74,13 +74,13 @@
           run: docker build -t frontend-image .
 
         - name: Run container in background
-          run: docker run -d -p 8080:80 --name test-frontend frontend-image
+          run: docker run -d -p 80:80 --name test-frontend frontend-image
 
         - name: Wait for container to start
           run: sleep 5
 
         - name: Test that frontend is running
-          run: curl --fail http://localhost:8080 || (docker logs test-frontend && exit 1)
+          run: curl --fail http://localhost:80 || (docker logs test-frontend && exit 1)
 
         - name: Stop and remove container
           run: docker rm -f test-frontend
@@ -116,7 +116,7 @@
           run: docker run -d -p 8081:8080 --name test-order-service order-service
 
         - name: Wait for container to start
-          run: sleep 15
+          run: sleep 30
 
         - name: Test that order-service is running
           run: curl --fail http://localhost:8081/actuator/health || (docker logs test-order-service && exit 1)
