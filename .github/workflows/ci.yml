@@ -33,19 +33,19 @@
           run: mvn clean install -DskipTests
 
         - name: Build Docker image
-          run: docker build -t api-gateway:latest .
+          run: docker build -t api-gateway-image:latest .
 
         - name: Run container in background
-          run: docker run -d -p 8080:8080 --name test-api-gateway api-gateway
+          run: docker run -d -p 8080:8080 --name api-gateway-container api-gateway-image
 
         - name: Wait for container to start
           run: sleep 5
 
         - name: Test that API Gateway is running
-          run: curl --fail http://localhost:8080/actuator/health || (docker logs test-api-gateway && exit 1)
+          run: curl --fail http://localhost:8080/actuator/health || (docker logs api-gateway-container && exit 1)
 
         - name: Stop and remove container
-          run: docker rm -f test-api-gateway
+          run: docker rm -f api-gateway-container
 
 
     build-frontend:
@@ -74,16 +74,16 @@
           run: docker build -t frontend-image .
 
         - name: Run container in background
-          run: docker run -d -p 80:80 --name test-frontend frontend-image
+          run: docker run -d -p 80:80 --name frontend-container frontend-image
 
         - name: Wait for container to start
           run: sleep 5
 
         - name: Test that frontend is running
-          run: curl --fail http://localhost:80 || (docker logs test-frontend && exit 1)
+          run: curl --fail http://localhost:80 || (docker logs frontend-container && exit 1)
 
         - name: Stop and remove container
-          run: docker rm -f test-frontend
+          run: docker rm -f frontend-container
 
 
     build-order-service:
@@ -110,17 +110,19 @@
           run: mvn clean install -DskipTests
 
         - name: Build Docker image
-          run: docker build -t order-service:latest .
+          run: docker build -t order-service-image:latest .
 
         - name: Run container in background
-          run: docker run -d -p 8081:8080 --name test-order-service order-service
+          run: docker run -d -p 8081:8080 --name order-service-container order-service-image
 
         - name: Wait for container to start
           run: sleep 5
 
         - name: Test that order-service is running
-          run: curl --fail http://localhost:8081/actuator/health || (docker logs test-order-service && exit 1)
+          run: curl --fail http://localhost:8081/actuator/health || (docker logs order-service-container && exit 1)
 
+        - name: Stop and remove container
+          run: docker rm -f order-service-container
 
 
 
@@ -170,6 +172,19 @@
 
         - name: Build project
           run: mvn clean install -DskipTests
+
+        - name: Build docker image
+          run: docker build -t product-service-image:latest .
+
+        - name: Run container in background
+          run: docker run -d -p 8082:808 --name product-service-container product-service-image
+
+        - name: Test that product-service is running
+          run: curl --fail http://localhost:8081/actuator/health || (docker logs product-service-container && exit 1)
+
+        - name: Stop and remove container
+          run: docker rm -f product-service-container
+          
 
 
     build-store-service:
