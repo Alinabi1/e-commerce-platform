@@ -180,11 +180,11 @@
           run: docker run -d -p 8082:808 --name product-service-container product-service-image
 
         - name: Test that product-service is running
-          run: curl --fail http://localhost:8081/actuator/health || (docker logs product-service-container && exit 1)
+          run: curl --fail http://localhost:8082/actuator/health || (docker logs product-service-container && exit 1)
 
         - name: Stop and remove container
           run: docker rm -f product-service-container
-          
+
 
 
     build-store-service:
