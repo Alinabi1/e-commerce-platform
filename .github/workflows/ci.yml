@@ -179,6 +179,9 @@
         - name: Run container in background
           run: docker run -d -p 8082:8080 --name product-service-container product-service-image
 
+        - name: Wait for container to start
+          run: sleep 5
+
         - name: Test that product-service is running
           run: curl --fail http://localhost:8082/actuator/health || (docker logs product-service-container && exit 1)
 
