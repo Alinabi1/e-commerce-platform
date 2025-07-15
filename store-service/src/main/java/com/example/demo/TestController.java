@@ -7,6 +7,6 @@ public class TestController {
 
     @GetMapping("/hello")
     public String hello() {
-        return "Hello from product-service!";
+        return "Hello from store-service!";
     }
 }
