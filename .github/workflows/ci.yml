@@ -213,6 +213,21 @@
         - name: Build project
           run: mvn clean install -DskipTests
 
+        - name: Build docker image
+          run: docker build -t store-service-image:latest .
+
+        - name: Run container in background
+          run: docker run -d -p 8083:8080 --name store-service-container store-service-image
+
+        - name: Wait for container to start
+          run: sleep 5
+
+        - name: Test that store-service is running
+          run: curl --fail http://localhost:8082/actuator/health || (docker logs store-service-container && exit 1)
+
+        - name: Stop and remove container
+          run: docker rm -f store-service-container
+
 
 
     build-user-service:
