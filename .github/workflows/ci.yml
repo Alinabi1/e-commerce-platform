@@ -148,6 +148,21 @@
         - name: Build project
           run: dotnet build --no-restore
 
+        - name: Build docker image
+          run: docker build -t payment-service-image
+
+        - name: Run container in background
+          run: docker run -d -p 8084:8080 --name payment-service-container payment-service-container
+
+        - name: Wait for container to start
+          run: sleep 5
+
+        - name: Test that payment-service-container is running
+          run: curl --fail http://localhost:8084/actuator/health || (docker logs payment-service-container && exit 1)
+
+        - name: Stop and remove container
+          run: docker rm -f payment-service-container
+
 
 
     build-product-service:

@@ -1,0 +1,12 @@
+C:\Github\e-commerce-platform\payment-service\publish\payment-service.exe
+C:\Github\e-commerce-platform\payment-service\publish\appsettings.Development.json
+C:\Github\e-commerce-platform\payment-service\publish\appsettings.json
+C:\Github\e-commerce-platform\payment-service\publish\payment-service.dll
+C:\Github\e-commerce-platform\payment-service\publish\payment-service.deps.json
+C:\Github\e-commerce-platform\payment-service\publish\payment-service.runtimeconfig.json
+C:\Github\e-commerce-platform\payment-service\publish\payment-service.pdb
+C:\Github\e-commerce-platform\payment-service\publish\Microsoft.AspNetCore.OpenApi.dll
+C:\Github\e-commerce-platform\payment-service\publish\Microsoft.OpenApi.dll
+C:\Github\e-commerce-platform\payment-service\publish\Swashbuckle.AspNetCore.Swagger.dll
+C:\Github\e-commerce-platform\payment-service\publish\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Github\e-commerce-platform\payment-service\publish\Swashbuckle.AspNetCore.SwaggerUI.dll
