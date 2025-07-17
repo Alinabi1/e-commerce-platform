@@ -152,7 +152,7 @@
           run: docker build -t payment-service-image .
 
         - name: Run container in background
-          run: docker run -d -p 8084:8080 --name payment-service-container payment-service-container
+          run: docker run -d -p 8084:8080 --name payment-service-container payment-service-image
 
         - name: Wait for container to start
           run: sleep 5
