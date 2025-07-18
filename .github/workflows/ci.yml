@@ -266,3 +266,18 @@
 
         - name: Build project
           run: dotnet build --no-restore
+
+        - name: Build docker image
+          run: docker build -t user-service-image .
+
+        - name: Run container in background
+          run: docker run -d -p 8085:8080 --name user-service-container user-service-image
+
+        - name: Wait for container to start
+          run: sleep 5
+
+        - name: Test that user-service-container is running
+          run: curl --fail http://localhost:8084/health || (docker logs user-service-container && exit 1)
+
+        - name: Stop and remove container
+          run: docker rm -f user-service-container
