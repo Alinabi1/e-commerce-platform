@@ -3,6 +3,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Lägg till detta för att aktivera MVC controllers:
 builder.Services.AddControllers();
 
+builder.Services.AddHealthChecks();
+
 // Swagger (om du vill ha det)
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -21,5 +23,9 @@ app.UseAuthorization();
 
 // Lägg till detta för att mappa dina controllers (t.ex. TasksController):
 app.MapControllers();
+
+app.MapHealthChecks("/health");
+
+
 
 app.Run();
