@@ -1,0 +1,75 @@
+version: "3.9"
+
+services:
+  api-gateway:
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile
+    container_name: api-gateway-container
+    ports:
+      - "8080:8080"
+    networks:
+      - e-commerce-platform
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: frontend-container
+    ports:
+      - "80:80"
+    networks:
+      - e-commerce-platform
+
+  order-service:
+    build:
+      context: ./order-service
+      dockerfile: Dockerfile
+    container_name: order-service-container
+    ports:
+      - "8082:8080"
+    networks:
+      - e-commerce-platform
+
+  payment-service:
+    build:
+      context: ./payment-service
+      dockerfile: dockerfile
+    container_name: payment-service-container
+    ports:
+      - "8083:8080"
+    networks:
+      - e-commerce-platform
+
+  product-service:
+    build:
+      context: ./product-service
+      dockerfile: Dockerfile
+    container_name: product-service-container
+    ports:
+      - "8084:8080"
+    networks:
+      - e-commerce-platform
+
+  store-service:
+    build:
+      context: ./store-service
+      dockerfile: Dockerfile
+    container_name: store-service-container
+    ports:
+      - "8085:8080"
+    networks:
+      - e-commerce-platform
+
+  user-service:
+    build:
+      context: ./user-service
+      dockerfile: dockerfile
+    container_name: user-service-container
+    ports:
+      - "8086:8080"
+    networks:
+      - e-commerce-platform
+
+networks:
+  e-commerce-platform:

@@ -9,275 +9,49 @@
   jobs:
 
 
-    build-api-gateway:
-      name: Build API-gateway
+    integration-test:
+      name: Build & Test All Services with Docker Compose
       runs-on: ubuntu-latest
-      defaults:
-        run:
-          working-directory: ./api-gateway
-
-      steps:
-        - name: checkout code
-          uses: actions/checkout@v3
-
-        - name: set up JDK
-          uses: actions/setup-java@v4
-          with:
-            distribution: 'temurin'
-            java-version: '22'
-
-        - name: Restore dependencies
-          run: mvn dependency:go-offline
-
-        - name: Build with maven
-          run: mvn clean install -DskipTests
-
-        - name: Build Docker image
-          run: docker build -t api-gateway-image:latest .
-
-        - name: Run container in background
-          run: docker run -d -p 8080:8080 --name api-gateway-container api-gateway-image
-
-        - name: Wait for container to start
-          run: sleep 5
-
-        - name: Test that API Gateway is running
-          run: curl --fail http://localhost:8080/actuator/health || (docker logs api-gateway-container && exit 1)
-
-        - name: Stop and remove container
-          run: docker rm -f api-gateway-container
-
-
-    build-frontend:
-      name: Build React Frontend
-      runs-on: ubuntu-latest
-      defaults:
-        run:
-          working-directory: ./frontend
-
       steps:
         - name: Checkout code
           uses: actions/checkout@v3
 
-        - name: Set up Node
-          uses: actions/setup-node@v3
-          with:
-            node-version: 20.12.2
+        - name: Set up Docker Buildx
+          uses: docker/setup-buildx-action@v2
 
-        - name: Install dependencies
-          run: npm install
+        - name: Build and start all services
+          run: docker-compose up -d --build
 
-        - name: Build frontend
-          run: npm run build
+        - name: Wait for services
+          run: |
+            echo "Waiting for services to start..."
+            sleep 20
 
-        - name: Build Docker image
-          run: docker build -t frontend-image .
+        - name: Wait for services to start
+          run: |
+            echo "Waiting for all services to start..."
+            sleep 25
 
-        - name: Run container in background
-          run: docker run -d -p 80:80 --name frontend-container frontend-image
+        - name: Test Frontend
+          run: curl --fail http://localhost || (docker logs $(docker ps -q --filter "name=frontend") && exit 1)
 
-        - name: Wait for container to start
-          run: sleep 5
+        - name: Test API Gateway
+          run: curl --fail http://localhost:8080/actuator/health || (docker logs $(docker ps -q --filter "name=api-gateway") && exit 1)
 
-        - name: Test that frontend is running
-          run: curl --fail http://localhost:80 || (docker logs frontend-container && exit 1)
+        - name: Test Order Service
+          run: curl --fail http://localhost:8081/actuator/health || (docker logs $(docker ps -q --filter "name=order-service") && exit 1)
 
-        - name: Stop and remove container
-          run: docker rm -f frontend-container
+        - name: Test Product Service
+          run: curl --fail http://localhost:8082/actuator/health || (docker logs $(docker ps -q --filter "name=product-service") && exit 1)
 
+        - name: Test Store Service
+          run: curl --fail http://localhost:8083/actuator/health || (docker logs $(docker ps -q --filter "name=store-service") && exit 1)
 
-    build-order-service:
-      name: Build Java (Order service)
-      runs-on: ubuntu-latest
-      defaults:
-        run:
-          working-directory: ./order-service
+        - name: Test Payment Service
+          run: curl --fail http://localhost:8084/health || (docker logs $(docker ps -q --filter "name=payment-service") && exit 1)
 
-      steps:
-        - name: Checkout code
-          uses: actions/checkout@v3
+        - name: Test User Service
+          run: curl --fail http://localhost:8085/health || (docker logs $(docker ps -q --filter "name=user-service") && exit 1)
 
-        - name: Set up JDK
-          uses: actions/setup-java@v4
-          with:
-            distribution: 'temurin'
-            java-version: '22'
-
-        - name: Restore dependencies
-          run: mvn dependency:go-offline
-
-        - name: Build project
-          run: mvn clean install -DskipTests
-
-        - name: Build Docker image
-          run: docker build -t order-service-image:latest .
-
-        - name: Run container in background
-          run: docker run -d -p 8081:8080 --name order-service-container order-service-image
-
-        - name: Wait for container to start
-          run: sleep 5
-
-        - name: Test that order-service is running
-          run: curl --fail http://localhost:8081/actuator/health || (docker logs order-service-container && exit 1)
-
-        - name: Stop and remove container
-          run: docker rm -f order-service-container
-
-
-
-    build-payment-service:
-      name: Build .NET (Payment  service)
-      runs-on: ubuntu-latest
-      defaults:
-        run:
-          working-directory: ./payment-service
-
-      steps:
-        - name: Checkout code
-          uses: actions/checkout@v4
-
-        - name: Set up .NET
-          uses: actions/setup-dotnet@v4
-          with:
-            dotnet-version: 8.0.403
-
-        - name: Restore dependencies
-          run: dotnet restore
-
-        - name: Build project
-          run: dotnet build --no-restore
-
-        - name: Build docker image
-          run: docker build -t payment-service-image .
-
-        - name: Run container in background
-          run: docker run -d -p 8084:8080 --name payment-service-container payment-service-image
-
-        - name: Wait for container to start
-          run: sleep 5
-
-        - name: Test that payment-service-container is running
-          run: curl --fail http://localhost:8084/health || (docker logs payment-service-container && exit 1)
-
-        - name: Stop and remove container
-          run: docker rm -f payment-service-container
-
-
-
-    build-product-service:
-      name: Build Java (Product service)
-      runs-on: ubuntu-latest
-      defaults:
-        run:
-          working-directory: ./product-service
-
-      steps:
-        - name: Checkout code
-          uses: actions/checkout@v3
-
-        - name: Set up JDK
-          uses: actions/setup-java@v4
-          with:
-            distribution: 'temurin'
-            java-version: '22'
-
-        - name: Restore dependencies
-          run: mvn dependency:go-offline
-
-        - name: Build project
-          run: mvn clean install -DskipTests
-
-        - name: Build docker image
-          run: docker build -t product-service-image:latest .
-
-        - name: Run container in background
-          run: docker run -d -p 8082:8080 --name product-service-container product-service-image
-
-        - name: Wait for container to start
-          run: sleep 5
-
-        - name: Test that product-service is running
-          run: curl --fail http://localhost:8082/actuator/health || (docker logs product-service-container && exit 1)
-
-        - name: Stop and remove container
-          run: docker rm -f product-service-container
-
-
-
-    build-store-service:
-      name: Build Java (Store service)
-      runs-on: ubuntu-latest
-      defaults:
-        run:
-          working-directory: ./store-service
-
-      steps:
-        - name: Checkout code
-          uses: actions/checkout@v3
-
-        - name: Set up JDK
-          uses: actions/setup-java@v4
-          with:
-            distribution: 'temurin'
-            java-version: '22'
-
-        - name: Restore dependencies
-          run: mvn dependency:go-offline
-
-        - name: Build project
-          run: mvn clean install -DskipTests
-
-        - name: Build docker image
-          run: docker build -t store-service-image:latest .
-
-        - name: Run container in background
-          run: docker run -d -p 8083:8080 --name store-service-container store-service-image
-
-        - name: Wait for container to start
-          run: sleep 5
-
-        - name: Test that store-service is running
-          run: curl --fail http://localhost:8083/actuator/health || (docker logs store-service-container && exit 1)
-
-        - name: Stop and remove container
-          run: docker rm -f store-service-container
-
-
-
-    build-user-service:
-      name: Build .NET (User  service)
-      runs-on: ubuntu-latest
-      defaults:
-        run:
-          working-directory: ./user-service
-
-      steps:
-        - name: Checkout code
-          uses: actions/checkout@v4
-
-        - name: Set up .NET
-          uses: actions/setup-dotnet@v4
-          with:
-            dotnet-version: 8.0.403
-
-        - name: Restore dependencies
-          run: dotnet restore
-
-        - name: Build project
-          run: dotnet build --no-restore
-
-        - name: Build docker image
-          run: docker build -t user-service-image .
-
-        - name: Run container in background
-          run: docker run -d -p 8085:8080 --name user-service-container user-service-image
-
-        - name: Wait for container to start
-          run: sleep 5
-
-        - name: Test that user-service-container is running
-          run: curl --fail http://localhost:8085/health || (docker logs user-service-container && exit 1)
-
-        - name: Stop and remove container
-          run: docker rm -f user-service-container
+        - name: Shut down all services
+          run: docker-compose down
