@@ -20,12 +20,7 @@
           uses: docker/setup-buildx-action@v2
 
         - name: Build and start all services
-          run: docker-compose up -d --build
-
-        - name: Wait for services
-          run: |
-            echo "Waiting for services to start..."
-            sleep 20
+          run: docker compose up -d --build
 
         - name: Wait for services to start
           run: |
@@ -54,4 +49,4 @@
           run: curl --fail http://localhost:8085/health || (docker logs $(docker ps -q --filter "name=user-service") && exit 1)
 
         - name: Shut down all services
-          run: docker-compose down
+          run: docker compose down
