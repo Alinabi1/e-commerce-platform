@@ -38,22 +38,22 @@
           run: curl --fail http://localhost:80 || (docker logs $(docker ps -q --filter "name=frontend") && exit 1)
 
         - name: Test API Gateway
-          run: curl --fail http://localhost:8080/actuator/health || (docker logs $(docker ps -q --filter "name=api-gateway") && exit 1)
+          run: curl --fail http://localhost:8080/actuator/health || (docker logs $(docker ps -q --filter "name=api-gateway-container") && exit 1)
 
         - name: Test Order Service
-          run: curl --fail http://localhost:8082/actuator/health || (docker logs $(docker ps -q --filter "name=order-service") && exit 1)
+          run: curl --fail http://localhost:8082/actuator/health || (docker logs $(docker ps -q --filter "name=order-service-container") && exit 1)
 
         - name: Test Product Service
-          run: curl --fail http://localhost:8084/actuator/health || (docker logs $(docker ps -q --filter "name=product-service") && exit 1)
+          run: curl --fail http://localhost:8084/actuator/health || (docker logs $(docker ps -q --filter "name=product-service-container") && exit 1)
 
         - name: Test Store Service
-          run: curl --fail http://localhost:8085/actuator/health || (docker logs $(docker ps -q --filter "name=store-service") && exit 1)
+          run: curl --fail http://localhost:8085/actuator/health || (docker logs $(docker ps -q --filter "name=store-service-container") && exit 1)
 
         - name: Test Payment Service
-          run: curl --fail http://localhost:8083/health || (docker logs $(docker ps -q --filter "name=payment-service") && exit 1)
+          run: curl --fail http://localhost:8083/health || (docker logs $(docker ps -q --filter "name=payment-service-container") && exit 1)
 
         - name: Test User Service
-          run: curl --fail http://localhost:8086/health || (docker logs $(docker ps -q --filter "name=user-service") && exit 1)
+          run: curl --fail http://localhost:8086/health || (docker logs $(docker ps -q --filter "name=user-service-container") && exit 1)
 
         - name: Shut down all services
           run: docker compose down
