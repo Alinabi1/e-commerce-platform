@@ -12,6 +12,10 @@
     integration-test:
       name: Build & Test All Services with Docker Compose
       runs-on: ubuntu-latest
+      env:
+        ORDER_DB_NAME: ${{ secrets.ORDER_DB_NAME }}
+        ORDER_DB_USER: ${{ secrets.ORDER_DB_USER }}
+        ORDER_DB_PASSWORD: ${{ secrets.ORDER_DB_PASSWORD }}
       steps:
         - name: Checkout code
           uses: actions/checkout@v3
