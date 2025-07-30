@@ -16,6 +16,9 @@
         ORDER_DB_NAME: ${{ secrets.ORDER_DB_NAME }}
         ORDER_DB_USER: ${{ secrets.ORDER_DB_USER }}
         ORDER_DB_PASSWORD: ${{ secrets.ORDER_DB_PASSWORD }}
+        PRODUCT_DB_NAME: ${{ secrets.PRODUCT_DB_NAME }}
+        PRODUCT_DB_USER: ${{ secrets.PRODUCT_DB_USER }}
+        PRODUCT_DB_PASSWORD: ${{ secrets.PRODUCT_DB_PASSWORD }}
       steps:
         - name: Checkout code
           uses: actions/checkout@v3
