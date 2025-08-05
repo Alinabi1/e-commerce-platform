@@ -102,7 +102,7 @@ services:
     container_name: product-service-db-container
     environment:
       POSTGRES_DB: ${PRODUCT_DB_NAME}
-      POSTGRES_USER: ${PRODUCT_DB_NAME}
+      POSTGRES_USER: ${PRODUCT_DB_USER}
       POSTGRES_PASSWORD: ${PRODUCT_DB_NAME}
     ports:
       - "5434:5432"
