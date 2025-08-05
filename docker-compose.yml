@@ -70,6 +70,12 @@ services:
     container_name: store-service-container
     ports:
       - "8085:8080"
+    depends_on:
+      - store-service-db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://store-service-db:5432/${STORE_DB_NAME}
+      SPRING_DATASOURCE_USERNAME: ${STORE_DB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${STORE_DB_PASSWORD}
     networks:
       - e-commerce-platform
 
@@ -111,10 +117,26 @@ services:
     networks:
       - e-commerce-platform
 
+  store-service-db:
+    image: postgres:16
+    container_name: store-service-db-container
+    environment:
+      POSTGRES_DB: ${STORE_DB_NAME}
+      POSTGRES_USER: ${STORE_DB_USER}
+      POSTGRES_PASSWORD: ${STORE_DB_PASSWORD}
+    ports:
+      - "5435:5432"
+    volumes:
+      - store-data:/var/lib/postgresql/data
+    networks:
+      - e-commerce-platform
+
 
 volumes:
   order-data:
   product-data:
+  store-data:
 
 networks:
   e-commerce-platform:
+    name: e-commerce-platform
