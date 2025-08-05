@@ -55,7 +55,7 @@ services:
     ports:
       - "8084:8080"
     depends_on:
-      - product_service_db
+      - product-service-db
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://product-service-db:5432/${PRODUCT_DB_NAME}
       SPRING_DATASOURCE_USERNAME: ${PRODUCT_DB_USER}
@@ -97,7 +97,7 @@ services:
     networks:
       - e-commerce-platform
 
-  product_service_db:
+  product-service-db:
     image: postgres:16
     container_name: product-service-db-container
     environment:
