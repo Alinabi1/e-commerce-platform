@@ -1,4 +1,4 @@
-﻿namespace payment_service.Controller;
+﻿namespace Payment_service.Controller;
 
 using Microsoft.AspNetCore.Mvc;
 

@@ -44,6 +44,10 @@ services:
     container_name: payment-service-container
     ports:
       - "8083:8080"
+    depends_on:
+    - payment-service-db
+    environment:
+      ConnectionStrings__DefaultConnection: Server=payment-service-db;Port=3306;Database=${PAYMENT_DB_NAME};User=${PAYMENT_DB_USER};Password=${PAYMENT_DB_PASSWORD};
     networks:
       - e-commerce-platform
 
@@ -86,6 +90,10 @@ services:
     container_name: user-service-container
     ports:
       - "8086:8080"
+    depends_on:
+      - user-service-db
+    environment:
+      ConnectionStrings__DefaultConnection: Server=user-service-db;Port=3306;Database=${USER_DB_NAME};User=${USER_DB_USER};Password=${USER_DB_PASSWORD};
     networks:
       - e-commerce-platform
 
@@ -131,11 +139,46 @@ services:
     networks:
       - e-commerce-platform
 
+  user-service-db:
+    image: mysql:8.0
+    container_name: user-service-db-container
+    restart: always
+    environment:
+      MYSQL_DATABASE: ${USER_DB_NAME}
+      MYSQL_USER: ${USER_DB_USER}
+      MYSQL_PASSWORD: ${USER_DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${USER_DB_ROOT_PASSWORD}
+    ports:
+      - "3307:3306"
+    volumes:
+      - user-data:/var/lib/postgresql/data
+    networks:
+      - e-commerce-platform
+
+
+  payment-service-db:
+    image: mysql:8.0
+    container_name: payment-service-db-ciontainer
+    restart: always
+    environment:
+      MYSQL_DATABASE: ${PAYMENT_DB_NAME}
+      MYSQL_USER: ${PAYMENT_DB_USER}
+      MYSQL_PASSWORD: ${PAYMENT_DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${PAYMENT_DB_ROOT_PASSWORD}
+    ports:
+      - "3308:3306"
+    volumes:
+      - payment-data:/var/lib/postgresql/data
+    networks:
+      - e-commerce-platform
+
 
 volumes:
   order-data:
   product-data:
   store-data:
+  user-data:
+  payment-data:
 
 networks:
   e-commerce-platform:

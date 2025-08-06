@@ -1,21 +1,24 @@
+using Microsoft.EntityFrameworkCore;
+using Payment_service.Data;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.WebHost.UseUrls("http://*:8080");
 
 // Lägg till detta för att aktivera MVC controllers:
 builder.Services.AddControllers();
 
 builder.Services.AddHealthChecks();
 
-// Swagger (om du vill ha det)
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseMySql(
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))
+    ));
+
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
 
 // Middleware
 // app.UseHttpsRedirection();  // valfritt

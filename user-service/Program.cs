@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using user_service.Data;
+using User_service.Data;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,17 +17,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
         ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))
     ));
 
-// Swagger (om du vill ha det)
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
 
 // Middleware
 // app.UseHttpsRedirection();  // valfritt

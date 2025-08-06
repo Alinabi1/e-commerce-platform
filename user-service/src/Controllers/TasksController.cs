@@ -1,4 +1,4 @@
-﻿namespace user_service.Controllers;
+﻿namespace User_service.Controllers;
 
 using Microsoft.AspNetCore.Mvc;
 

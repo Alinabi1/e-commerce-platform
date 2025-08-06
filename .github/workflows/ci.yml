@@ -19,6 +19,15 @@
         PRODUCT_DB_NAME: ${{ secrets.PRODUCT_DB_NAME }}
         PRODUCT_DB_USER: ${{ secrets.PRODUCT_DB_USER }}
         PRODUCT_DB_PASSWORD: ${{ secrets.PRODUCT_DB_PASSWORD }}
+        USER_DB_NAME: ${{ secrets.USER_DB_NAME }}
+        USER_DB_USER: ${{ secrets.USER_DB_USER }}
+        USER_DB_PASSWORD: ${{ secrets.USER_DB_PASSWORD }}
+        USER_DB_ROOT_PASSWORD: ${{ secrets.USER_DB_ROOT_PASSWORD }}
+        PAYMENT_DB_NAME: ${{ secrets.PAYMENT_DB_NAME }}
+        PAYMENT_DB_USER: ${{ secrets.PAYMENT_DB_USER }}
+        PAYMENT_DB_PASSWORD: ${{ secrets.PAYMENT_DB_PASSWORD }}
+        PAYMENT_DB_ROOT_PASSWORD: ${{ secrets.PAYMENT_DB_ROOT_PASSWORD }}
+
       steps:
         - name: Checkout code
           uses: actions/checkout@v3

@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace User_service.Data
+namespace Payment_service.Data
 {
     public class AppDbContext : DbContext
     {
